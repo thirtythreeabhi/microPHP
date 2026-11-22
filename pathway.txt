@@ -1,0 +1,181 @@
+Project: PHP written in PHP
+
+Goal: Build a progressively more capable PHP interpreter using PHP 8.x, without eval(), include, or delegating source execution to Zend.
+
+We'll call it MiniPHP for now.
+
+Each milestone should produce something executable, testable, and worth committing. Don't implement everything at once.
+
+12 milestones
+
+Estimated 35–65 focused hours
+
+Phase 1 — Build the interpreter
+
+Milestone tracker
+
+0/12 complete
+
+1. Read source files · 1–2 hours
+
+  - Build a CLI entry point: php miniphp.php example.php
+  - Read the source as plain text
+  - Report missing files and invalid CLI arguments
+
+Acceptance test: Your program reads a PHP file and prints its source, without executing it.
+
+2. Build a lexer · 3–5 hours
+
+  - Recognize PHP opening tags, integers, strings and variable names
+  - Recognize operators, punctuation and keywords
+  - Track line and column positions
+  - Reject unexpected characters
+
+Acceptance test: $x = 10 + 20; becomes a sequence of typed tokens.
+
+3. Build a parser · 4–6 hours
+
+  - Implement recursive descent parsing
+  - Build AST nodes for literals, variables, binary expressions and echo statements
+  - Implement operator precedence and parentheses
+  - Report syntax errors with locations
+
+Acceptance test: echo 2 + 3 × 4; becomes an AST where multiplication is evaluated before addition.
+
+4. Execute expressions · 2–4 hours
+
+  - Evaluate AST nodes recursively
+  - Implement integer arithmetic and string concatenation
+  - Implement echo
+  - Handle division by zero and unsupported operators
+
+Acceptance test: echo (10 + 5) × 2; outputs 30.
+
+5. Variables and assignment · 2–4 hours
+
+  - Create an environment to store variable values
+  - Implement variable reads and assignment
+  - Handle undefined variables with a documented initial policy
+  - Support sequential statements
+
+Acceptance test: $x = 10; $x = $x + 5; echo $x; outputs 15.
+
+6. Conditions and loops · 4–6 hours
+
+  - Implement booleans, comparisons and logical operators
+  - Implement if/else and while
+  - Add for loops, break and continue
+  - Implement PHP-like truthiness
+
+Acceptance test: A while loop calculates the sum of integers from 1 to 100 and outputs 5050.
+
+7. Functions and scope · 4–7 hours
+
+  - Parse function declarations and calls
+  - Implement parameters and return values
+  - Create call frames and local scope
+  - Support recursion and basic built-in functions
+
+Acceptance test: A recursive factorial(5) function outputs 120.
+
+Phase 2 — Make it behave like PHP
+
+These milestones move beyond basic interpreter construction into PHP runtime behavior and performance.
+
+8. PHP type semantics · 4–7 hours
+
+  - Model null, bool, int, float and string
+  - Implement strict and loose comparisons
+  - Implement explicit and implicit conversions
+  - Compare behavior against the installed PHP version
+
+Acceptance test: A compatibility test suite checks expressions such as 5 == '5' and 5 === '5'.
+
+9. Arrays · 3–6 hours
+
+  - Implement indexed and associative arrays
+  - Implement element access and assignment
+  - Support foreach and count()
+  - Handle PHP array-key conversion
+
+Acceptance test: An associative array can be created, modified and iterated.
+
+10. Errors and diagnostics · 2–4 hours
+
+  - Separate lexical, syntax and runtime errors
+  - Report filename, line and column
+  - Add useful stack traces for function calls
+  - Build negative test cases
+
+Acceptance test: Invalid programs fail with useful diagnostics instead of crashing the interpreter.
+
+11. Bytecode virtual machine · 6–10 hours
+
+  - Compile the AST into stack-based instructions
+  - Implement a bytecode instruction dispatcher
+  - Add operand and call stacks
+  - Compare AST interpretation with VM execution
+
+Acceptance test: Both execution engines produce identical results for supported programs.
+
+12. Compatibility and performance · 4–8 hours
+
+  - Build differential tests against real PHP
+  - Measure execution speed and memory usage
+  - Identify unsupported PHP features
+  - Document architectural decisions and limitations
+
+Acceptance test: A regression suite runs through both MiniPHP and native PHP, reporting mismatches.
+
+Suggested repository structure
+
+This is the eventual structure, not something you need to create immediately.
+
+miniphp/
+├── bin/
+│   └── miniphp.php
+├── src/
+│   ├── Lexer/
+│   ├── Parser/
+│   ├── Ast/
+│   ├── Runtime/
+│   ├── Interpreter/
+│   └── VM/
+├── tests/
+│   ├── Lexer/
+│   ├── Parser/
+│   ├── Interpreter/
+│   └── Compatibility/
+├── examples/
+├── composer.json
+└── README.md
+
+Development rules
+
+1. No eval() or include for executing target programs. Using Composer autoloading for your own interpreter classes is fine.
+2. Test each layer independently. Lexer tests shouldn't need a parser. Parser tests shouldn't need an interpreter.
+3. Use native PHP as the reference implementation, but explicitly document where MiniPHP intentionally differs.
+4. Don't copy Zend's architecture prematurely. First understand the problem, implement your solution, then inspect how Zend handles it.
+5. Commit after every milestone. Prefer small, inspectable changes rather than a massive AI-generated implementation.
+
+When should you stop?
+
+After milestone 7 — You have a real interpreter.
+
+It supports variables, expressions, conditions, loops, functions, and recursion.
+
+After milestone 10 — You have a useful PHP-subset implementation.
+
+You can run meaningful programs and diagnose failures.
+
+After milestone 12 — You have an interpreter and a bytecode VM.
+
+Now you can study execution strategies, instruction dispatch, performance, and runtime design.
+
+One thing I'd do differently from a typical tutorial: at every milestone, predict how PHP behaves before testing it. Then implement your understanding, run the same input through native PHP, and investigate any discrepancy.
+
+That's where the real learning happens.
+
+Ready to begin?
+
+Start milestone 1
